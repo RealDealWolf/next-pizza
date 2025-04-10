@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# Next Pizza 
 
-First, run the development server:
+### Клиент
+– React, TypeScript – создание интерфейса, типизация компонентов.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+– Next.js – фреймворк для создания серверных и статических приложений с поддержкой маршрутизации.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+– React Hook Form – управление состоянием и валидация форм.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+– Axios – выполнение HTTP-запросов к API.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+– Zod – валидация данных, используемых в формах и запросах.
 
-## Learn More
+### Стилизация
+– Tailwind CSS – утилитарный CSS-фреймворк для быстрой и адаптивной стилизации.
 
-To learn more about Next.js, take a look at the following resources:
+– Tailwind Merge – утилита для объединения классов Tailwind CSS с учетом их специфики.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+– Shadcn UI – набор компонентов UI, построенный на Radix UI, с интеграцией Tailwind CSS для удобной стилизации и создания доступных интерфейсов.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Утилиты и компоненты
+– Radix UI – набор доступных UI-компонентов, используемых через Shadcn UI для реализации интерфейсов с фокусом на доступность и взаимодействие.
 
-## Deploy on Vercel
+– Lucide React – библиотека иконок для React, использующих SVG.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+– clsx – утилита для условного применения классов.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+– Class Variance Authority (CVA) – библиотека для обработки различных состояний CSS-классов.
+
+### Аутентификация и безопасность
+– NextAuth.js – система аутентификации для Next.js, поддерживающая OAuth, JWT и другие способы аутентификации.
+
+– bcrypt – хеширование паролей для обеспечения безопасности пользовательских данных.
+
+### Работа с базой данных
+– Prisma – ORM для работы с базой данных, позволяющий безопасно и удобно выполнять запросы.
+
+– Prisma Studio – визуальный интерфейс для работы с данными в базе.
+
+– @neondatabase/serverless – подключение и работа с серверless базой данных Neon.
+
+### Разработка и тестирование
+– TypeScript – строгая типизация, которая помогает избежать ошибок и улучшить поддержку кода.
+
+– ESLint – инструмент для проверки качества кода и соблюдения кодстайла.
+
+– Prettier – автоформатирование кода для поддержания единообразия.
+
+– ts-node – исполнение TypeScript кода без предварительной компиляции в JavaScript.
+
+– Prisma Migrations – инструменты для создания и применения миграций базы данных.
+
+### Дополнительные библиотеки
+– react-hot-toast – уведомления в приложении для информирования пользователей о событиях.
+
+– react-insta-stories – создание историй в стиле Instagram для приложения.
+
+– react-use – набор полезных хуков для работы с состоянием и эффектами в React.
