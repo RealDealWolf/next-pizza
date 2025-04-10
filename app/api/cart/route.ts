@@ -1,7 +1,8 @@
 import { prisma } from "@/prisma/prisma-client";
 import { NextRequest, NextResponse } from "next/server";
 import crypto from 'crypto';
-import { findOrCreateCart } from "@/shared/lib";
+import { findOrCreateCart, updateCartTotalAmount } from "@/shared/lib";
+import { CreateCartItemValues } from "@/shared/services/dto/cart-dto";
 
 export async function GET(req: NextRequest) {
 
@@ -65,9 +66,38 @@ export async function POST(req: NextRequest) {
         const findCartItem = await prisma.cartItem.findFirst({
             where: {
                 cartId: userCart.id,
-                productItemId: req.body.productItemId,
+                productItemId: data.productItemId,
+                ingredients: { every: { id: { in: data.ingredients } } },
             },
         });
+
+        // Если товар был найден, делаем + 1
+        if (findCartItem) {
+            await prisma.cartItem.update({
+                where: {
+                    id: findCartItem.id,
+                },
+                data: {
+                    quantity: findCartItem.quantity + 1,
+                },
+            });
+
+
+        }
+
+        await prisma.cartItem.create({
+            data: {
+                cartId: userCart.id,
+                productItemId: data.productItemId,
+                quantity: 1,
+                ingredients: { connect: data.ingredients?.map((id) => ({ id })) },
+            },
+        });
+
+        const updateedUserCart = await updateCartTotalAmount(token);
+        const resp = NextResponse.json(updateedUserCart);
+        resp.cookies.set('cartToken', token);
+        return resp;
 
     } catch (error) {
 
