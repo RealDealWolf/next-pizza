@@ -1,6 +1,7 @@
 import { prisma } from "@/prisma/prisma-client";
 import { NextRequest, NextResponse } from "next/server";
 import crypto from 'crypto';
+import { findOrCreateCart } from "@/shared/lib";
 
 export async function GET(req: NextRequest) {
 
@@ -56,6 +57,17 @@ export async function POST(req: NextRequest) {
         if (!token) {
             token = crypto.randomUUID();
         }
+
+        const userCart = await findOrCreateCart(token);
+
+        const data = (await req.json()) as CreateCartItemValues;
+
+        const findCartItem = await prisma.cartItem.findFirst({
+            where: {
+                cartId: userCart.id,
+                productItemId: req.body.productItemId,
+            },
+        });
 
     } catch (error) {
 
