@@ -13,27 +13,39 @@ import { usePizzaOptions } from '@/shared/hooks';
 import { getPizzaDetails } from '@/shared/lib';
 
 interface Props {
-
     imageUrl: string;
     name: string;
     ingredients: Ingredient[];
     items: ProductItem[];
-    onClickAddCart?: VoidFunction;
+    loading?: boolean;
+    onSubmit: (itemId: number, ingredients: number[]) => void;
     className?: string;
 }
+
+/**
+ * Форма выбора пиццы
+ */
 
 export const ChoosePizzaForm: React.FC<Props> = ({
     imageUrl,
     name,
     items,
     ingredients,
-    onClickAddCart,
+    loading,
+    onSubmit,
     className,
 }) => {
 
-
-    const { size, type, selectedIngredients, availableSizes, setSize, setType, addIngredient } =
-        usePizzaOptions(items);
+    const {
+        size,
+        type,
+        selectedIngredients,
+        availableSizes,
+        setSize,
+        setType,
+        addIngredient,
+        currentItemId,
+    } = usePizzaOptions(items);
 
     const { totalPrice, textDetails } = getPizzaDetails(
         type,
@@ -44,11 +56,10 @@ export const ChoosePizzaForm: React.FC<Props> = ({
     );
 
     const handleClickAdd = () => {
-        onClickAddCart?.();
-        console.log({
-            size, type, ingredients: selectedIngredients,
-        })
-    }
+        if (currentItemId) {
+            onSubmit(currentItemId, Array.from(selectedIngredients));
+        };
+    };
 
     return (
         <div className={cn(className, 'flex flex-1')}>
@@ -88,7 +99,10 @@ export const ChoosePizzaForm: React.FC<Props> = ({
                     </div>
                 </div>
 
-                <Button onClick={handleClickAdd} className='h-[55px] px-10 text-base rounded-[18px] w-full mt-10'>
+                <Button
+                    loading={loading}
+                    onClick={handleClickAdd}
+                    className='h-[55px] px-10 text-base rounded-[18px] w-full mt-10'>
                     Добавить в корзину за {totalPrice} ₽
                 </Button>
 
