@@ -14,7 +14,6 @@ interface Props {
     className?: string;
 }
 
-
 export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({ children, className }) => {
 
     const [totalAmount, fetchCartItems, updateItemQuantity, removeCartItem, items] = useCartStore(state => [
@@ -57,6 +56,7 @@ export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({ children,
                                         item.pizzaSize as PizzaSize,
                                     )
                                     : ''}
+                                disabled={item.disabled}
                                 name={item.name}
                                 price={item.price}
                                 quantity={item.quantity}
