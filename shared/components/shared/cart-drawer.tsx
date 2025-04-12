@@ -11,7 +11,7 @@ import { getCartItemDetails } from '@/shared/lib';
 import { PizzaType, PizzaSize } from '@/shared/constants/pizza';
 import { useCartStore } from '@/shared/store';
 import { Title } from './title';
-import clsx from 'clsx';
+import { cn } from '@/shared/lib/utils';
 
 interface Props {
     className?: string;
@@ -41,7 +41,7 @@ export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({ children,
             <SheetTrigger asChild>{children}</SheetTrigger>
             <SheetContent className='flex flex-col justify-between pb-0 bg-[#f4f1ee]'>
 
-                <div className={clsx('flex flex-col h-full', !totalAmount && 'justify-center')}>
+                <div className={cn('flex flex-col h-full', !totalAmount && 'justify-center')}>
 
                     {totalAmount > 0 && (
                         <SheetHeader>
