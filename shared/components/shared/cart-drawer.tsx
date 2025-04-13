@@ -9,28 +9,14 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import CartDrawerItem from './cart-drawer-item';
 import { getCartItemDetails } from '@/shared/lib';
 import { PizzaType, PizzaSize } from '@/shared/constants/pizza';
-import { useCartStore } from '@/shared/store';
 import { Title } from './title';
 import { cn } from '@/shared/lib/utils';
+import { useCart } from '@/shared/hooks';
 
-interface Props {
-    className?: string;
-}
+export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
 
-export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({ children, className }) => {
-
-    const [totalAmount, fetchCartItems, updateItemQuantity, removeCartItem, items] = useCartStore(state => [
-        state.totalAmount,
-        state.fetchCartItems,
-        state.updateItemQuantity,
-        state.removeCartItem,
-        state.items,
-    ]);
-
-    React.useEffect(() => {
-        fetchCartItems();
-    }, []);
-
+    const { totalAmount, updateItemQuantity, items, removeCartItem, } = useCart();
+    const [redirecting, setRedirecting] = React.useState(false);
     const onClickCountButton = (id: number, quantity: number, type: 'plus' | 'minus') => {
         const newQuantity = type === 'plus' ? quantity + 1 : quantity - 1;
         updateItemQuantity(id, newQuantity);
@@ -78,13 +64,11 @@ export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({ children,
                                     <CartDrawerItem
                                         id={item.id}
                                         imageUrl={item.imageUrl}
-                                        details={item.pizzaSize && item.pizzaType
-                                            ? getCartItemDetails(
-                                                item.ingredients,
-                                                item.pizzaType as PizzaType,
-                                                item.pizzaSize as PizzaSize,
-                                            )
-                                            : ''}
+                                        details={getCartItemDetails(
+                                            item.ingredients,
+                                            item.pizzaType as PizzaType,
+                                            item.pizzaSize as PizzaSize,
+                                        )}
                                         disabled={item.disabled}
                                         name={item.name}
                                         price={item.price}
@@ -108,8 +92,8 @@ export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({ children,
                                     <span className='font-bold text-lg'>{totalAmount} ₽ </span>
                                 </div>
 
-                                <Link href='/cart'>
-                                    <Button type='submit' className='w-full h-12 text-base'>
+                                <Link href='/checkout'>
+                                    <Button onClick={() => setRedirecting(true)} loading={redirecting} type='submit' className='w-full h-12 text-base'>
                                         Оформить заказ
                                         <ArrowRight className='w-5 ml-2' />
                                     </Button>
@@ -125,7 +109,3 @@ export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({ children,
 };
 
 export default CartDrawer;
-
-function fetchCartItems() {
-    throw new Error('Function not implemented.');
-}
