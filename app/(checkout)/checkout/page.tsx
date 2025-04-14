@@ -1,5 +1,6 @@
 'use client';
 
+import React from "react";
 import { useCart } from "@/shared/hooks";
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,9 +8,10 @@ import { CheckoutSidebar, Container, Title, } from "@/shared/components/shared";
 import { CheckoutCart, CheckoutPersonalForm, CheckoutAddressForm } from '@/shared/components';
 import { checkoutFormSchema, CheckoutFormSValues } from "@/shared/constants";
 import { createOrder } from "@/app/actions";
+import toast from "react-hot-toast";
 
 export default function CheckoutLayout() {
-
+    const [submiting, setSubmiting] = React.useState(false);
     const { totalAmount, updateItemQuantity, items, removeCartItem, loading } = useCart();
 
     const form = useForm({
@@ -24,9 +26,33 @@ export default function CheckoutLayout() {
         }
     });
 
-    const onSubmit = (data: CheckoutFormSValues) => {
-        console.log(data);
-        createOrder(data);
+    const onSubmit = async (data: CheckoutFormSValues) => {
+
+        try {
+            setSubmiting(true);
+            const url = await createOrder(data);
+            toast.success(
+                <span className="items-center">
+                    Заказ успешно создан! 📝<br />
+                    Переход на оплату...
+                </span>,
+                {
+                    icon: '✅',
+                }
+            );
+
+            if (url) {
+                location.href = url;
+            }
+
+        } catch (error) {
+            console.error(error)
+            setSubmiting(false);
+            toast.error('Не удалось создать заказ', {
+                icon: '❌',
+            });
+        }
+
     }
 
     const onClickCountButton = (id: number, quantity: number, type: 'plus' | 'minus') => {
@@ -39,7 +65,7 @@ export default function CheckoutLayout() {
             <Title text="Оформление заказа" className="font-extrabold mb-8 text-[36px]" />
 
             <FormProvider {...form}>
-                <form action="" onSubmit={form.handleSubmit(onSubmit)}>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
                     <div className="flex gap-10">
                         {/*Левая часть*/}
                         <div className="flex flex-col gap-10 flex-1 mb-20">
@@ -55,7 +81,9 @@ export default function CheckoutLayout() {
                         </div>
                         {/*Правая часть*/}
                         <div className="w-[450px]">
-                            <CheckoutSidebar totalAmount={totalAmount} loading={loading} />
+                            <CheckoutSidebar
+                                totalAmount={totalAmount}
+                                loading={loading || submiting} />
                         </div>
 
                     </div>

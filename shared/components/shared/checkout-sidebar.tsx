@@ -12,12 +12,12 @@ interface Props {
 }
 
 const VAT = 15;
-const DELIVITY_PRICE = 350;
+const DELIVERY_PRICE = 350;
 
 export const CheckoutSidebar: React.FC<Props> = ({ totalAmount, className, loading }) => {
 
-    const vatPrice = (totalAmount * VAT) / 100;
-    const CheckoutTotalAmount = totalAmount + vatPrice + DELIVITY_PRICE;
+    const vatPrice = Math.round((totalAmount * VAT) / 100);
+    const CheckoutTotalAmount = totalAmount + vatPrice + DELIVERY_PRICE;
 
     return (
         <WhiteBlock className={cn("p-6 sticky top-4", className)}>
@@ -45,11 +45,11 @@ export const CheckoutSidebar: React.FC<Props> = ({ totalAmount, className, loadi
                     <Truck size={20} className="mr-2 text-gray-400" />
                     Доставка
                 </div>
-            } value={loading ? <Skeleton className='w-16 h-6 rounded-md' /> : `${DELIVITY_PRICE} ₽`} />
+            } value={loading ? <Skeleton className='w-16 h-6 rounded-md' /> : `${DELIVERY_PRICE} ₽`} />
 
 
-            <Button type="submit" className="w-full h-14 rounded-2xl mt-6 text-base font-bold">
-                Перейти к оплате
+            <Button loading={loading} type="submit" className="w-full h-14 rounded-2xl mt-6 text-base font-bold">
+                Оформить заказ
                 <ArrowRight className="w-5 ml-2" />
             </Button>
         </WhiteBlock>
