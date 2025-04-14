@@ -4,12 +4,13 @@ import { useCart } from "@/shared/hooks";
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CheckoutSidebar, Container, Title, } from "@/shared/components/shared";
-import { CheckoutCart, CheckoutPersonalForm, CheckoutAddressForm, checkoutFormSchema } from '@/shared/components/shared/checkout';
-import { CheckoutFormSValues } from "@/shared/components/shared/checkout/checkout-form-schema";
+import { CheckoutCart, CheckoutPersonalForm, CheckoutAddressForm } from '@/shared/components';
+import { checkoutFormSchema, CheckoutFormSValues } from "@/shared/constants";
+import { createOrder } from "@/app/actions";
 
 export default function CheckoutLayout() {
 
-    const { totalAmount, updateItemQuantity, items, removeCartItem, } = useCart();
+    const { totalAmount, updateItemQuantity, items, removeCartItem, loading } = useCart();
 
     const form = useForm({
         resolver: zodResolver(checkoutFormSchema),
@@ -25,6 +26,7 @@ export default function CheckoutLayout() {
 
     const onSubmit = (data: CheckoutFormSValues) => {
         console.log(data);
+        createOrder(data);
     }
 
     const onClickCountButton = (id: number, quantity: number, type: 'plus' | 'minus') => {
@@ -37,7 +39,6 @@ export default function CheckoutLayout() {
             <Title text="Оформление заказа" className="font-extrabold mb-8 text-[36px]" />
 
             <FormProvider {...form}>
-
                 <form action="" onSubmit={form.handleSubmit(onSubmit)}>
                     <div className="flex gap-10">
                         {/*Левая часть*/}
@@ -46,18 +47,19 @@ export default function CheckoutLayout() {
                                 onClickCountButton={onClickCountButton}
                                 removeCartItem={removeCartItem}
                                 items={items}
+                                loading={loading}
                             />
-                            <CheckoutPersonalForm />
-                            <CheckoutAddressForm />
+                            <CheckoutPersonalForm className={loading ? 'opacity-40 pointer-events-none' : ''} />
+
+                            <CheckoutAddressForm className={loading ? 'opacity-40 pointer-events-none' : ''} />
                         </div>
                         {/*Правая часть*/}
                         <div className="w-[450px]">
-                            <CheckoutSidebar totalAmount={totalAmount} />
+                            <CheckoutSidebar totalAmount={totalAmount} loading={loading} />
                         </div>
 
                     </div>
                 </form>
-
             </FormProvider>
         </Container>
     )
